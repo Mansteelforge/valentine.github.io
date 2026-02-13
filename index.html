@@ -80,7 +80,7 @@
       // Configuration
       const GROWTH_PER_CLICK = 35;
       const FONT_GROWTH_PER_CLICK = 25;
-      const MAX_NO_CLICKS = 5;
+      const MAX_NO_CLICKS = 6;
 
       const IMAGE_PATHS = [
         './images/image1.gif',
@@ -118,26 +118,46 @@
       let fontSize = 20;
 
       noButton.addEventListener('click', () => {
-        if (noClickCount >= MAX_NO_CLICKS) return;
+  if (noClickCount >= MAX_NO_CLICKS) return;
 
-        noClickCount++;
+  noClickCount++;
 
-        // Update image and alt text
-        imageDisplay.src = IMAGE_PATHS[noClickCount];
-        imageDisplay.alt = ALT_TEXTS[noClickCount];
+  // Update image and alt text
+  imageDisplay.src = IMAGE_PATHS[noClickCount];
+  imageDisplay.alt = ALT_TEXTS[noClickCount];
 
-        // Grow the "Yes" button to make it harder to ignore
-        buttonHeight += GROWTH_PER_CLICK;
-        buttonWidth += GROWTH_PER_CLICK;
-        fontSize += FONT_GROWTH_PER_CLICK;
+  // If this is the LAST no click → make Yes button full screen
+  if (noClickCount === MAX_NO_CLICKS) {
+    yesButton.style.position = "fixed";
+    yesButton.style.top = "0";
+    yesButton.style.left = "0";
+    yesButton.style.width = "100vw";
+    yesButton.style.height = "100vh";
+    yesButton.style.fontSize = "5rem";
+    yesButton.style.borderRadius = "0";
+    yesButton.style.zIndex = "9999";
 
-        yesButton.style.height = `${buttonHeight}px`;
-        yesButton.style.width = `${buttonWidth}px`;
-        yesButton.style.fontSize = `${fontSize}px`;
+    // Optional: center text nicely
+    yesButton.style.display = "flex";
+    yesButton.style.alignItems = "center";
+    yesButton.style.justifyContent = "center";
 
-        // Update "No" button text with increasingly desperate messages
-        noButton.textContent = NO_BUTTON_MESSAGES[noClickCount];
-      });
+    noButton.style.display = "none";
+    return;
+  }
+
+  // Otherwise keep growing normally
+  buttonHeight += GROWTH_PER_CLICK;
+  buttonWidth += GROWTH_PER_CLICK;
+  fontSize += FONT_GROWTH_PER_CLICK;
+
+  yesButton.style.height = `${buttonHeight}px`;
+  yesButton.style.width = `${buttonWidth}px`;
+  yesButton.style.fontSize = `${fontSize}px`;
+
+  noButton.textContent = NO_BUTTON_MESSAGES[noClickCount];
+});
+
 
       yesButton.addEventListener('click', () => {
         imageDisplay.src = IMAGE_PATHS[IMAGE_PATHS.length - 1];
